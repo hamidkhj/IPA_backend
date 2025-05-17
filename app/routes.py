@@ -79,3 +79,9 @@ async def speak_text(data: dict):
     audio = text_to_speech(text)
     print(type(audio))
     return StreamingResponse(audio, media_type="audio/mpeg")
+
+
+
+@router.get("/ping")
+def ping():
+    return {"status": "ok"}
