@@ -4,9 +4,13 @@ from .routes import router
 
 app = FastAPI()
 
+origins = [
+    'https://mypersonalassistant.vercel.app/',
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace with your frontend URL in production
+    allow_origins=origins,  # Replace with your frontend URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
