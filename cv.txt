@@ -1,0 +1,56 @@
+Hamid Kouhpeimay Jahromi
+Email: Koohpeyma.hamid@gmail.com | Phone: +447340339143
+
+EDUCATION
+- M.Sc. Data Science, University of Salford, UK (Apr 2025)
+- B.Sc. Computer Engineering, Islamic Azad University, Iran (Dec 2023)
+
+EXPERIENCES
+
+Associate Researcher – University of Salford (Dec 2024 – Present)
+- Conducted advanced research on Automatic Speech Recognition (ASR) models for multi-speaker transcription.
+- Developed and fine-tuned ASR models with PyTorch.
+- Built MVPs for AI transcription tools with high usability and performance.
+- Collaborated across teams to apply research in real-world use cases.
+- Improved transcription accuracy through performance evaluation.
+
+Machine Learning and AI Internship – University of Salford (May–Aug 2024)
+- Worked on semantic segmentation using diffusion models.
+- Developed a few-shot learning model for medical image segmentation (25% accuracy improvement).
+- Built training pipelines using PyTorch Lightning.
+
+Full-Stack Developer – DatisPars Co (Jun 2020 – Sep 2022)
+- Developed web apps using PHP Laravel and React.js.
+- Collaborated with product teams and conducted code reviews.
+
+PROJECTS
+
+Real-Time Transcription with Whisper
+- Engineered a real-time transcription pipeline with VAD (voice activity detection).
+- Built modular components to activate only during detected speech.
+
+ASR Model Analysis (Research)
+- Compared ASR models: Whisper, Azure, Deepgram, IBM Watson.
+- Evaluated with legally-themed datasets focusing on fairness and bias.
+
+Few-Shot Medical Image Segmentation
+- Created a model reaching 80% accuracy on unseen data with <10 training images.
+- Built full pipeline and visualization tools in Python.
+
+Online Conference App
+- Built a video conferencing app with WebRTC and Agora SDK.
+- Included video/audio calls, screen sharing, and chat.
+
+License Plate Recognition System
+- Developed plate detection with YOLO and OCR.
+- Fine-tuned for Persian plates with high accuracy.
+
+SKILLS
+- ML: PyTorch, Lightning, Scikit-Learn, Azure, Transformers, ASR, CV
+- Languages: Python, SQL, JS, PHP
+- Web Dev: React, Laravel, Tailwind CSS
+- Tools: Streamlit, Pandas, PowerBI, Seaborn, Matplotlib
+
+LINKS
+LinkedIn: linkedin.com/in/hamid-kouhpeimay-jahromi-05893516a
+GitHub: github.com/hamidkhj
