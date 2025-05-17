@@ -5,7 +5,8 @@ from .routes import router
 app = FastAPI()
 
 origins = [
-    'https://mypersonalassistant.vercel.app/',
+    "https://mypersonalassistant.vercel.app",  
+    "http://localhost:5173",  
 ]
 
 app.add_middleware(
