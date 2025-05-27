@@ -12,10 +12,21 @@ co = cohere.ClientV2(COHERE_API_KEY)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CV_PATH = os.path.join(BASE_DIR, "..", "cv.txt")
 
+DOCUMENT_CONTENT = None
+
+
+def store_user_document(text: str):
+    global DOCUMENT_CONTENT
+    DOCUMENT_CONTENT = text
+    return True
+
 # Load and chunk the CV
-def load_cv_chunks(filename=CV_PATH, chunk_size=3):
-    with open(filename, "r", encoding="utf-8") as f:
-        lines = [line.strip() for line in f if line.strip()]
+def load_uploaded_chunks(chunk_size=3):
+    global DOCUMENT_CONTENT
+    if not DOCUMENT_CONTENT:
+        raise ValueError("No document uploaded yet.")
+
+    lines = [line.strip() for line in DOCUMENT_CONTENT.splitlines() if line.strip()]
     
     chunks = []
     for i in range(0, len(lines), chunk_size):
@@ -38,7 +49,7 @@ def cosine_similarity(vec1, vec2):
 
 # Answer a question using RAG
 async def generate_answer_from_transcription(question: str):
-    chunks = load_cv_chunks()
+    chunks = load_uploaded_chunks()
     embedded_chunks = embed_chunks(chunks)
 
     # Embed the question

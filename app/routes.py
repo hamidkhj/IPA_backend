@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from .rag import answer_question
 from .rag import generate_answer_from_transcription
+from .rag import store_user_document
 from fastapi import UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.responses import StreamingResponse
@@ -13,6 +14,8 @@ from .tts import text_to_speech
 import io
 from io import BytesIO
 from .config import DEEPGRAM_API_KEY
+from PyPDF2 import PdfReader
+from docx import Document
 
 router = APIRouter()
 
@@ -26,6 +29,32 @@ async def ask_question(question: Question):
 
 
 
+@router.post("/upload")
+async def upload_document(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        filename = file.filename.lower()
+
+        if filename.endswith(".txt"):
+            text = content.decode("utf-8")
+        elif filename.endswith(".pdf"):
+            from PyPDF2 import PdfReader
+            reader = PdfReader(io.BytesIO(content))
+            text = "\n".join(p.extract_text() for p in reader.pages if p.extract_text())
+        elif filename.endswith(".docx"):
+            from docx import Document
+            doc = Document(io.BytesIO(content))
+            text = "\n".join([para.text for para in doc.paragraphs])
+        else:
+            return JSONResponse(content={"error": "Unsupported file type"}, status_code=400)
+
+        success = store_user_document(text)
+        if success:
+            return {"message": "Document indexed"}
+        return JSONResponse(content={"error": "Failed to process document"}, status_code=500)
+
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
 # UPLOAD_DIR = "uploaded_audio"
