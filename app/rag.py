@@ -61,11 +61,11 @@ async def generate_answer_from_transcription(question: str):
         (chunk, cosine_similarity(q_embed, emb))
         for chunk, emb in embedded_chunks
     ]
-    top_chunks = sorted(scored, key=lambda x: x[1], reverse=True)[:3]
+    top_chunks = sorted(scored, key=lambda x: x[1], reverse=True)[:5]
     context = "\n".join([chunk for chunk, _ in top_chunks])
 
     # Compose prompt
-    prompt = f"""Answer the following question using the CV content below.
+    prompt = f"""Answer the following question using only the content of the uploaded document.
 
             CV:
             {context}
@@ -75,7 +75,6 @@ async def generate_answer_from_transcription(question: str):
 
     answer = await call_together_llm(prompt)
     
-    # For now, mock the answer — we’ll plug a model in next
     return {answer}
 
 
@@ -88,9 +87,8 @@ async def call_together_llm(prompt: str) -> str:
     model="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
     messages=[
       {"role": "system", "content": 
-       """You are an assistant that answers questions about a CV.
-      Make your answer as positive as possible to help him get a job. Your response should be seamless with no bullet points, numbering or any other similar things. 
-      Keep your answers as short as possible and on point"""
+        """You are a helpful assistant that answers questions using only the content of an uploaded document. 
+        Do not guess or invent information. If the answer is not found in the document, say you don't know. Keep your answers short and to the point."""
       },
       {"role": "user", "content": f"{prompt}"},
         ],
