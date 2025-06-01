@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from .rag import answer_question
 from .rag import generate_answer_from_transcription
 from .rag import store_user_document
-from fastapi import UploadFile, File
+from fastapi import UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.responses import StreamingResponse
 import httpx
@@ -16,6 +16,8 @@ from io import BytesIO
 from .config import DEEPGRAM_API_KEY
 from PyPDF2 import PdfReader
 from docx import Document
+import json
+
 
 router = APIRouter()
 
@@ -61,7 +63,7 @@ async def upload_document(file: UploadFile = File(...)):
 # os.makedirs(UPLOAD_DIR, exist_ok=True)  # Create dir if not exists
 
 @router.post("/transcribe")
-async def transcribe_audio(file: UploadFile = File(...)):
+async def transcribe_audio(file: UploadFile = File(...), history: str = Form(default=[])):
     # # Save file locally (Optional)
     # timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
     # filename = f"{timestamp}_{file.filename}"
@@ -90,10 +92,10 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     transcript = response.json().get("results", {}).get("channels", [{}])[0].get("alternatives", [{}])[0].get("transcript", "")
 
-
+    conversation_history = json.loads(history)
+    
     # use transcription to generate answer
-    answer = await generate_answer_from_transcription(transcript)
-
+    answer = await generate_answer_from_transcription(transcript, conversation_history)
 
     # audio_path = text_to_speech(answer)
     # audio_url = f"/audio/{os.path.basename(audio_path)}"

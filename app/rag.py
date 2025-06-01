@@ -48,7 +48,7 @@ def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 # Answer a question using RAG
-async def generate_answer_from_transcription(question: str):
+async def generate_answer_from_transcription(question: str, history: list):
     chunks = load_uploaded_chunks()
     embedded_chunks = embed_chunks(chunks)
 
@@ -56,7 +56,7 @@ async def generate_answer_from_transcription(question: str):
     response = co.embed(texts=[question], model="embed-english-v3.0", input_type='search_document', embedding_types= ['float'])
     q_embed = response.embeddings.float_[0]
 
-    # Find top-3 similar chunks
+    # Find top-n similar chunks
     scored = [
         (chunk, cosine_similarity(q_embed, emb))
         for chunk, emb in embedded_chunks
@@ -64,12 +64,13 @@ async def generate_answer_from_transcription(question: str):
     top_chunks = sorted(scored, key=lambda x: x[1], reverse=True)[:5]
     context = "\n".join([chunk for chunk, _ in top_chunks])
 
+    print(history)
+
     # Compose prompt
-    prompt = f"""Answer the following question using only the content of the uploaded document.
-
-            CV:
-            {context}
-
+    prompt = f"""document:
+            {context}"""+ "\n".join(
+                [f"Q: {turn['question']}\nA: {turn['answer']}" for turn in history]
+            ) + f"""
             Question: {question}
             Answer:"""
 
